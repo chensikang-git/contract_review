@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
+    <data-source source="LOCAL" name="@10.220.138.120" uuid="1aadc403-edf1-4496-9595-94a8013fcf3e">
+      <driver-ref>mysql.8</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://10.220.138.120:3306</jdbc-url>
+      <jdbc-additional-properties>
+        <property name="com.intellij.clouds.kubernetes.db.host.port" />
+        <property name="com.intellij.clouds.kubernetes.db.enabled" value="false" />
+        <property name="com.intellij.clouds.kubernetes.db.resource.type" value="Deployment" />
+        <property name="com.intellij.clouds.kubernetes.db.container.port" />
+      </jdbc-additional-properties>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
+    <data-source source="LOCAL" name="0@10.220.138.120" uuid="839355b6-4d72-4ca1-bb24-c29ce5ba6523">
+      <driver-ref>redis</driver-ref>
+      <synchronize>true</synchronize>
+      <imported>true</imported>
+      <remarks>$PROJECT_DIR$/user-service/src/main/resources/application.yaml</remarks>
+      <jdbc-driver>jdbc.RedisDriver</jdbc-driver>
+      <jdbc-url>jdbc:redis://10.220.138.120:6379/0</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
+    <data-source source="LOCAL" name="0@42.193.225.22" uuid="65ad0a0e-2bbc-4fc8-865e-6caf65e9c5fb">
+      <driver-ref>redis</driver-ref>
+      <synchronize>true</synchronize>
+      <imported>true</imported>
+      <remarks>$PROJECT_DIR$/chat-service/src/main/resources/application.yaml</remarks>
+      <jdbc-driver>jdbc.RedisDriver</jdbc-driver>
+      <jdbc-url>jdbc:redis://42.193.225.22:6379/0</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
+    <data-source source="LOCAL" name="0@10.220.138.120" uuid="08b95257-4926-4733-a6ff-6e17f6bd0a35">
+      <driver-ref>redis</driver-ref>
+      <synchronize>true</synchronize>
+      <imported>true</imported>
+      <remarks>$PROJECT_DIR$/contract-review-user-service/src/main/resources/application.yaml</remarks>
+      <jdbc-driver>jdbc.RedisDriver</jdbc-driver>
+      <jdbc-url>jdbc:redis://10.220.138.120:6379/0</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
+    <data-source source="LOCAL" name="mysql" uuid="3c3d4219-e38e-4257-ba5a-137af819d6f5">
+      <imported>true</imported>
+      <remarks>$PROJECT_DIR$/chat-service/src/main/resources/application.yaml</remarks>
+      <jdbc-driver>org.apache.shardingsphere.driver.ShardingSphereDriver</jdbc-driver>
+      <jdbc-url>jdbc:shardingsphere:classpath:shardingsphere-config.yaml</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
+    <data-source source="LOCAL" name="mysql" uuid="6051895d-03df-4d05-8420-bc8745184aae">
+      <imported>true</imported>
+      <configured-by-url>true</configured-by-url>
+      <remarks>$PROJECT_DIR$/user-service/src/main/resources/application.yaml</remarks>
+      <jdbc-driver>org.apache.shardingsphere.driver.ShardingSphereDriver</jdbc-driver>
+      <jdbc-url>jdbc:shardingsphere:classpath:shardingsphere-config.yaml</jdbc-url>
+      <jdbc-additional-properties>
+        <property name="com.intellij.clouds.kubernetes.db.enabled" value="false" />
+      </jdbc-additional-properties>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
+    <data-source source="LOCAL" name="mysql" uuid="9afe823c-9303-4588-bc94-7b3d329aa7ac">
+      <imported>true</imported>
+      <remarks>$PROJECT_DIR$/contract-review-user-service/src/main/resources/application.yaml</remarks>
+      <jdbc-driver>org.apache.shardingsphere.driver.ShardingSphereDriver</jdbc-driver>
+      <jdbc-url>jdbc:shardingsphere:classpath:shardingsphere-config.yaml</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
+  </component>
+</project>

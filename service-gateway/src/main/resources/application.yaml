@@ -1,0 +1,39 @@
+server:
+  port: 444 # 网关端口
+spring:
+  application:
+    name: contract-review-gateway${unique-name:}-service  # 服务名称
+  profiles:
+#    active: aggregation
+     active: dev
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 10.220.138.120:8848 # nacos地址
+    gateway:  # 网关路由配置
+      routes:
+        - id: contract-review-user-service
+          uri: lb://contract-review--user-service
+          predicates:
+            - Path=/api/user-service/**
+          filters:
+            - name: TokenValidate
+              args:
+                blackPathPre:
+                  - /api/user-service/login
+        - id: review-contract-review-service
+          uri: lb://review-contract--review-service # 路由的目标地址 lb就是负载均衡，后面跟服务名称
+          predicates: # 路由断言，也就是判断请求是否符合路由规则的条件
+            - Path=/api/review-service/**  # 匹配的 WebSocket 路径
+          filters:
+            - name: TokenValidate
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  metrics:
+    tags:
+      application: ${spring.application.name}
+

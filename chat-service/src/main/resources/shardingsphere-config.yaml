@@ -1,0 +1,10 @@
+dataSources:
+  ds_0:
+    dataSourceClassName: com.zaxxer.hikari.HikariDataSource
+    driverClassName: com.mysql.cj.jdbc.Driver
+#    jdbcUrl: jdbc:mysql://42.193.225.22:3306/miniprogramming?useUnicode=true&characterEncoding=UTF-8&rewriteBatchedStatements=true&allowMultiQueries=true&serverTimezone=Asia/Shanghai
+    jdbcUrl: jdbc:mysql://42.193.225.22:3306/miniprogramming?useUnicode=true&characterEncoding=UTF-8&rewriteBatchedStatements=true&allowMultiQueries=true&serverTimezone=Asia/Shanghai
+    username: root
+    password: 520131
+props:
+  sql-show: true

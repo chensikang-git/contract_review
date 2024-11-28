@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SshConfigs">
+    <configs>
+      <sshConfig authType="PASSWORD" host="42.193.225.22" id="d14ea73c-8cbe-4220-b0f6-d18b7c704d4a" port="22" customName="远程服务器2" nameFormat="CUSTOM" username="ubuntu" useOpenSSHConfig="false">
+        <option name="customName" value="远程服务器2" />
+      </sshConfig>
+      <sshConfig authType="PASSWORD" host="42.193.225.22" id="7f3ac2d0-2c2f-4667-9842-95f8d1db8bfc" port="22" nameFormat="DESCRIPTIVE" username="ubuntu" useOpenSSHConfig="true" />
+    </configs>
+  </component>
+</project>

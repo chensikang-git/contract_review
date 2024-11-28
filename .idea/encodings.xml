@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/chat-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/chat-service/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/contract-review-user-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/contract-review-user-service/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/dependencies/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/dependencies/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/frameworks/base/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/frameworks/base/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/frameworks/cache/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/frameworks/cache/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/frameworks/common/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/frameworks/common/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/frameworks/convention/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/frameworks/convention/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/frameworks/database/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/frameworks/database/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/frameworks/designpattern/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/frameworks/designpattern/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/frameworks/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/frameworks/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/frameworks/user/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/frameworks/user/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/frameworks/web/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/frameworks/web/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/service-gateway/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/service-gateway/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/user-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/user-service/src/main/resources" charset="UTF-8" />
+  </component>
+</project>

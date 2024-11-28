@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="1341e869-2a8e-44d4-8ec3-f9c35de3edea" name="律师远程服务器">
+        <fileTransfer accessType="SFTP" host="42.193.225.22" port="22" sshConfigId="d14ea73c-8cbe-4220-b0f6-d18b7c704d4a" sshConfig="远程服务器2">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+      <webServer id="8d32054c-ac0c-4e86-bd3c-d1d0c6b00c5e" name="律师远程服务器4开头">
+        <fileTransfer rootFolder="/home/ubuntu" accessType="SFTP" host="42.193.225.22" port="22" sshConfigId="d14ea73c-8cbe-4220-b0f6-d18b7c704d4a" sshConfig="远程服务器2">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
