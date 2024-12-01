@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <!-- 父项目配置 -->
+    <parent>
+        <groupId>com.swufe</groupId>
+        <artifactId>chatlaw_miniprogramming</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <!-- 当前模块的唯一标识 -->
+    <artifactId>llm-service</artifactId>
+
+    <!-- 项目的属性配置 -->
+    <properties>
+        <!-- 设置 Java 编译版本 -->
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <!-- 设置项目的编码格式 -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <!-- 项目的依赖 -->
+    <dependencies>
+        <!-- Spring Boot Web Starter 用于创建 Web 应用 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <!-- Spring Boot 测试依赖，用于单元测试 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+        </dependency>
+
+        <!-- ShardingSphere 用于分库分表 -->
+        <dependency>
+            <groupId>org.apache.shardingsphere</groupId>
+            <artifactId>shardingsphere-jdbc-core</artifactId>
+        </dependency>
+
+        <!-- JWT 库，用于生成和解析 JSON Web Token -->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+        </dependency>
+
+        <!-- JAXB 依赖，提供 Java 对 XML 的绑定 -->
+        <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+            <version>2.3.0</version>
+        </dependency>
+
+        <!-- JAXB 实现库 -->
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-impl</artifactId>
+            <version>2.3.0</version>
+        </dependency>
+
+        <!-- JAXB 核心库 -->
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-core</artifactId>
+            <version>2.3.0</version>
+        </dependency>
+
+        <!-- Java Activation API 库 -->
+        <dependency>
+            <groupId>javax.activation</groupId>
+            <artifactId>activation</artifactId>
+            <version>1.1.1</version>
+        </dependency>
+
+        <!-- 阿里巴巴 FastJSON2 库，用于处理 JSON 数据 -->
+        <dependency>
+            <groupId>com.alibaba.fastjson2</groupId>
+            <artifactId>fastjson2</artifactId>
+        </dependency>
+
+        <!-- Spring Cloud Alibaba Nacos Discovery，用于微服务的服务发现 -->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+        </dependency>
+
+        <!-- Spring Cloud Alibaba Sentinel，用于流量控制和降级 -->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>
+        </dependency>
+
+        <!-- 自定义模块：数据库 Spring Boot Starter -->
+        <dependency>
+            <groupId>com.swufe</groupId>
+            <artifactId>database-spring-boot-starter</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!-- 自定义模块：Web Spring Boot Starter -->
+        <dependency>
+            <groupId>com.swufe</groupId>
+            <artifactId>web-spring-boot-starter</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!-- 自定义模块：缓存 Spring Boot Starter -->
+        <dependency>
+            <groupId>com.swufe</groupId>
+            <artifactId>cache-spring-boot-starter</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!-- 自定义模块：设计模式 Spring Boot Starter -->
+        <dependency>
+            <groupId>com.swufe</groupId>
+            <artifactId>designpattern-spring-boot-starter</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!-- 自定义模块：约定 Spring Boot Starter -->
+        <dependency>
+            <groupId>com.swufe</groupId>
+            <artifactId>convention-spring-boot-starter</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!-- 自定义模块：通用 Spring Boot Starter -->
+        <dependency>
+            <groupId>com.swufe</groupId>
+            <artifactId>common-spring-boot-starter</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!-- 自定义模块：基础 Spring Boot Starter -->
+        <dependency>
+            <groupId>com.swufe</groupId>
+            <artifactId>base-spring-boot-starter</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!-- 自定义模块：用户 Spring Boot Starter -->
+        <dependency>
+            <groupId>com.swufe</groupId>
+            <artifactId>user-spring-boot-starter</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!-- Spring Cloud OpenFeign 用于声明式 REST 客户端 -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
+
+        <!-- 引入文件存储工具库 -->
+        <dependency>
+            <groupId>org.dromara.x-file-storage</groupId>
+            <artifactId>x-file-storage-spring</artifactId>
+            <version>2.2.1</version>
+        </dependency>
+
+        <!-- 腾讯云 COS SDK，用于文件存储 -->
+        <dependency>
+            <groupId>com.qcloud</groupId>
+            <artifactId>cos_api</artifactId>
+            <version>5.6.137</version>
+        </dependency>
+
+        <!-- MyBatis Spring 集成，用于数据库持久层 -->
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis-spring</artifactId>
+            <version>3.0.3</version>
+            <scope>compile</scope>
+        </dependency>
+
+    </dependencies>
+
+    <!-- 构建配置 -->
+    <build>
+        <finalName>${project.artifactId}</finalName>
+        <plugins>
+            <!-- Spring Boot Maven 插件，用于打包和重打包应用 -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <!-- Repackage 是 Spring Boot 插件的目标，用于生成可执行的 JAR 包 -->
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
