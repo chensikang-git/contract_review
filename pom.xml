@@ -22,7 +22,8 @@
         <module>frameworks/web</module>
         <module>frameworks/cache</module>
         <module>chat-service</module>
-        <module>contract-review-user-service</module>
+        <module>llm-service</module>
+<!--        <module>contract-review-user-service</module>-->
     </modules>
 
     <properties>

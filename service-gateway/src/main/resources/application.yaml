@@ -4,8 +4,8 @@ spring:
   application:
     name: contract-review-gateway${unique-name:}-service  # 服务名称
   profiles:
-#    active: aggregation
-     active: dev
+    #    active: aggregation
+    active: dev
   cloud:
     nacos:
       discovery:
@@ -21,10 +21,10 @@ spring:
               args:
                 blackPathPre:
                   - /api/user-service/login
-        - id: review-contract-review-service
-          uri: lb://review-contract--review-service # 路由的目标地址 lb就是负载均衡，后面跟服务名称
+        - id: contract-review-llm-service
+          uri: lb://contract-review-llm-service # 路由的目标地址 lb就是负载均衡，后面跟服务名称
           predicates: # 路由断言，也就是判断请求是否符合路由规则的条件
-            - Path=/api/review-service/**  # 匹配的 WebSocket 路径
+            - Path=/api/llm-service/**  # 匹配的 WebSocket 路径
           filters:
             - name: TokenValidate
 

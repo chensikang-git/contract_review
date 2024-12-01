@@ -1,0 +1,60 @@
+server:
+  port: 9003
+spring:
+  application:
+    name: contract-review-llm${unique-name:}-service
+  servlet:
+    multipart:
+      enabled: true #是否启用http上传处理
+      max-request-size: 100MB #最大请求文件的大小
+      max-file-size: 20MB #设置单个文件最大长度
+      file-size-threshold: 20MB #当文件达到多少时进行磁盘写入
+  datasource:
+    driver-class-name: org.apache.shardingsphere.driver.ShardingSphereDriver
+    url: jdbc:shardingsphere:classpath:shardingsphere-config.yaml
+  data:
+    redis:
+      host: 10.220.138.120
+      port: 6379
+      password: 20001017  # 添加 Redis 密码
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 10.220.138.120:8848
+      password: nacos
+      username: nacos
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+framework:
+  fastjson:
+    safa-mode: true
+  cache:
+    redis:
+      value-timeout: 50000
+      bloom-filter:
+        user-register:
+          name: user_register_cache_penetration_bloom_filter${unique-name:}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  metrics:
+    tags:
+      application: ${spring.application.name}
+dromara:
+  x-file-storage: #文件存储配置
+    default-platform: tencent-cos-1  #默认使用的存储平台
+    thumbnail-suffix: ".min.jpg" #缩略图后缀，例如【.min.jpg】【.png】
+    tencent-cos:
+      - platform: tencent-cos-1 # 存储平台标识
+        enable-storage: true  # 启用存储
+        secret-id: AKIDZzBOVO1VjijvymMmxslVF4zlHZeUHB5S
+        secret-key: PdxS7jCRhrnW1IMCxX2N8sqjmjSxJnDW
+        region: ap-chengdu #存仓库所在地域
+        bucket-name: yema-1252530263
+        domain: https://yema-1252530263.cos.ap-chengdu.myqcloud.com/ # 访问域名
+        base-path: test/ # 基础路径

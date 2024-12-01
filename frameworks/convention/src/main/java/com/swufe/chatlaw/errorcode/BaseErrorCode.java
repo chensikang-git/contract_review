@@ -35,7 +35,10 @@ public enum BaseErrorCode implements IErrorCode {
     USER_NAME_SENSITIVE_ERROR("A000114", "用户名包含敏感词"),
     USER_NAME_SPECIAL_CHARACTER_ERROR("A000113", "用户名包含特殊字符"),
 
-
+    FILE_TYPE_ERROR("C000113", "文件格式不正确，请检查文件格式"),
+    FILE_TRANS_ERROR("A000114", "服务器文件复制错误"),
+    FILE_ADD_ERROR("A000115", "服务器新增文件错误"),
+    FILE_NOT_FOUND_ERROR("A000116", "服务器文件不存在错误"),
 
 
     // ========== 二级宏观错误码 系统请求缺少幂等Token ==========

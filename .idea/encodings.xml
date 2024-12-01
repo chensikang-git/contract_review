@@ -25,6 +25,8 @@
     <file url="file://$PROJECT_DIR$/frameworks/user/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/frameworks/web/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/frameworks/web/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/llm-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/llm-service/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/service-gateway/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/service-gateway/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/java" charset="UTF-8" />
