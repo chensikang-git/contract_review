@@ -21,10 +21,11 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static com.swufe.chatlaw.errorcode.BaseErrorCode.*;
-import static com.swufe.llmservice.common.contant.llmConstant.DOCX_FILE_DIR_PATH;
+import static com.swufe.llmservice.common.contant.llmConstant.*;
 
 
 @Service
@@ -71,10 +72,21 @@ public class DocxFileServiceImpl implements DocxFileService {
 
     @Override
     public DocxFileDTO retrievalDocxFile(Long id) {
-        DocxFileDO docxFileDO = docxFileMapper.selectOne(
-                new QueryWrapper<DocxFileDO>()
-                        .eq("id", id).
-                        eq("user_id", UserContext.getUserId())
+//        DocxFileDO docxFileDO = docxFileMapper.selectOne(
+//                new QueryWrapper<DocxFileDO>()
+//                        .eq("id", id).
+//                        eq("user_id", UserContext.getUserId())
+//        );
+        DocxFileDO docxFileDO = distributedCache.get(
+                LLM_FILE_KEY + id,
+                DocxFileDO.class,
+                () -> docxFileMapper.selectOne(
+                        new QueryWrapper<DocxFileDO>()
+                                .eq("id", id).
+                                eq("user_id", UserContext.getUserId())
+                ),
+                TIME_OUT_OF_SECONDS,
+                TimeUnit.SECONDS
         );
         if (docxFileDO == null) {
             throw new ServiceException(FILE_NOT_FOUND_ERROR);

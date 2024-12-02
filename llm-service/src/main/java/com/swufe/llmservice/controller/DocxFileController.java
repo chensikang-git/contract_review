@@ -1,6 +1,5 @@
 package com.swufe.llmservice.controller;
 
-
 import com.swufe.chatlaw.Results;
 import com.swufe.chatlaw.result.Result;
 import com.swufe.llmservice.dto.DocxFileDTO;
@@ -8,7 +7,6 @@ import com.swufe.llmservice.service.DocxFileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 
 import java.util.List;
 
@@ -18,6 +16,9 @@ import static com.swufe.llmservice.common.contant.llmConstant.PROJECT_CONTEXT_PA
 @RequiredArgsConstructor
 @RestController
 public class DocxFileController {
+    /**
+     * 第一版写法
+     */
 
     private final DocxFileService docxFileService;
 
