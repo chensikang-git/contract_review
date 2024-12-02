@@ -4,6 +4,8 @@ public class llmConstant {
 
     public static final String PROJECT_CONTEXT_PATH = "/api/llm-service";
 
+    public static final int FILE_INIT_STATUS = 1;
+
     public static String HEAD_IMG_DIR_PATH = null;
     public static String DOCX_FILE_DIR_PATH = null;
     public static String EXECUTED_DOCX_FILE_DIR_PATH = null;

@@ -15,21 +15,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.Date;
 
 @Data
-@TableName("file") // 对应数据库的 user 表
+@TableName("file") // 对应数据库的 file 表
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class DocxFileDO extends BaseDO {
     @TableId(type = IdType.AUTO) // 指定自增主键策略
     private Long id;
+
     private String fileName;
 
     private String filePath;
 
     private String fileExecutedPath;
-
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private Date uploadTime;
 
     private Long userId;
 

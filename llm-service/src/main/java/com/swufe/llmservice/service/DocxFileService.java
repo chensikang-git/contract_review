@@ -1,7 +1,7 @@
 package com.swufe.llmservice.service;
 
 
-import com.swufe.llmservice.dto.DocxFileDTO;
+import com.swufe.llmservice.dto.DocxFileRespDTO;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -14,7 +14,7 @@ public interface DocxFileService {
 
     //todo
 
-    DocxFileDTO retrievalDocxFile(Long id);
+    DocxFileRespDTO retrievalDocxFile(Long id);
 
-    List<DocxFileDTO> retrievalDocxFiles();
+    List<DocxFileRespDTO> retrievalDocxFiles();
 }
