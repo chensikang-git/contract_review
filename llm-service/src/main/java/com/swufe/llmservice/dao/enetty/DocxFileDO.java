@@ -2,17 +2,14 @@ package com.swufe.llmservice.dao.enetty;
 
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.swufe.chatlaw.base.BaseDO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import java.util.Date;
 
 @Data
 @TableName("file") // 对应数据库的 file 表
@@ -31,7 +28,8 @@ public class DocxFileDO extends BaseDO {
 
     private Long userId;
 
-    private Integer status;
+    private Long status;
 
-    private FileStatusDO fileStatus; // 第二次查询时插入
+    @TableField(exist = false)
+    private DocxFileStatusDO fileStatus; // 第二次查询时插入
 }

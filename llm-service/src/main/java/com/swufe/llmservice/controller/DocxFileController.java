@@ -1,8 +1,10 @@
 package com.swufe.llmservice.controller;
 
 import com.swufe.chatlaw.Results;
+import com.swufe.chatlaw.page.PageRequest;
+import com.swufe.chatlaw.page.PageResponse;
 import com.swufe.chatlaw.result.Result;
-import com.swufe.llmservice.dto.DocxFileRespDTO;
+import com.swufe.llmservice.dto.resp.DocxFileRespDTO;
 import com.swufe.llmservice.service.DocxFileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -37,8 +39,13 @@ public class DocxFileController {
         return Results.success(docxFileService.retrievalDocxFile(id));
     }
 
-    @GetMapping("/retrieval")
+//    @GetMapping("/retrieval")
     public Result<List<DocxFileRespDTO>> retrievalDocxFiles() {
         return Results.success(docxFileService.retrievalDocxFiles());
+    }
+
+    @GetMapping("/retrieval")
+    public Result<PageResponse<DocxFileRespDTO>> retrievalDocxFilesByPage(PageRequest pageRequest) {
+        return Results.success(docxFileService.retrievalDocxFilesByPage(pageRequest));
     }
 }

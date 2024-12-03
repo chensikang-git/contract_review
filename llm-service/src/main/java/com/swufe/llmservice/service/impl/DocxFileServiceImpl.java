@@ -1,19 +1,23 @@
 package com.swufe.llmservice.service.impl;
 
-
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
 import com.swufe.chatlaw.DistributedCache;
 import com.swufe.chatlaw.core.UserContext;
 import com.swufe.chatlaw.exception.ClientException;
 import com.swufe.chatlaw.exception.ServiceException;
+import com.swufe.chatlaw.page.PageRequest;
+import com.swufe.chatlaw.page.PageResponse;
 import com.swufe.llmservice.dao.enetty.DocxFileDO;
+import com.swufe.llmservice.dao.enetty.DocxFileStatusDO;
 import com.swufe.llmservice.dao.mapper.DocxFileMapper;
-import com.swufe.llmservice.dto.DocxFileRespDTO;
+import com.swufe.llmservice.dao.mapper.DocxFileStatusMapper;
+import com.swufe.llmservice.dto.resp.DocxFileRespDTO;
 import com.swufe.llmservice.service.DocxFileService;
+import com.swufe.llmservice.tooklit.SBeanUtil;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.User;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,6 +37,8 @@ import static com.swufe.llmservice.common.contant.llmConstant.*;
 public class DocxFileServiceImpl implements DocxFileService {
 
     private final DocxFileMapper docxFileMapper;
+    private final DocxFileStatusMapper docxFileStatusMapper;
+
     private final DistributedCache distributedCache;
 
     @Override
@@ -61,10 +67,14 @@ public class DocxFileServiceImpl implements DocxFileService {
 
     @Override
     public void deleteDocxFile(Long id) {
-//        Map<String, Object> idMap = new HashMap<>();
-//        idMap.put("id", id);
-//        idMap.put("user_id", UserContext.getUserId());
-//        int delete = docxFileMapper.deleteByMap(idMap);
+        // 删缓存
+        boolean isRemoved = distributedCache.delete(LLM_FILE_KEY + id);
+        System.out.println("!!!!!!!!!!!!!"+isRemoved);
+        if (!isRemoved) {
+            throw new ServiceException(REDIS_CLEAN_ERROR);
+        }
+
+        // 删数据
         int delete = docxFileMapper.delete(
                 new LambdaQueryWrapper<DocxFileDO>()
                         .eq(DocxFileDO::getId, id)
@@ -76,27 +86,9 @@ public class DocxFileServiceImpl implements DocxFileService {
     }
 
     @Override
-    public DocxFileRespDTO retrievalDocxFile(Long id) {
-        DocxFileDO docxFileDO = distributedCache.get(
-                LLM_FILE_KEY + id,
-                DocxFileDO.class,
-                () -> docxFileMapper.getDocxFileByIdAndUserId(id, UserContext.getUserId()),
-                TIME_OUT_OF_SECONDS,
-                TimeUnit.SECONDS
-        );
-        if (docxFileDO == null) {
-            throw new ServiceException(FILE_NOT_FOUND_ERROR);
-        }
-        // 将查询结果转换为 DTO
-        DocxFileRespDTO docxFileDTO = new DocxFileRespDTO();
-        BeanUtils.copyProperties(docxFileDO, docxFileDTO);
-        return docxFileDTO;
-    }
-
-    @Override
     public List<DocxFileRespDTO> retrievalDocxFiles() {
         return docxFileMapper.selectList(
-                        new QueryWrapper<DocxFileDO>().eq("user_id", UserContext.getUserId())
+                        new LambdaQueryWrapper<DocxFileDO>().eq(DocxFileDO::getUserId, UserContext.getUserId())
                 )
                 .stream()
                 .map(docxFileDO -> {
@@ -105,5 +97,66 @@ public class DocxFileServiceImpl implements DocxFileService {
                     return docxFileDTO;
                 })
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public DocxFileRespDTO retrievalDocxFile(Long id) {
+        DocxFileDO docxFileDO = distributedCache.get(
+                LLM_FILE_KEY + id,
+                DocxFileDO.class,
+                () -> docxFileMapper.selectOne(new LambdaQueryWrapper<DocxFileDO>()
+                        .eq(DocxFileDO::getId, id)
+                        .eq(DocxFileDO::getUserId, UserContext.getUserId())),
+                TIME_OUT_OF_SECONDS,
+                TimeUnit.SECONDS
+        );
+        if (docxFileDO == null) {
+            throw new ServiceException(FILE_NOT_FOUND_ERROR);
+        }
+        DocxFileStatusDO docxFileStatusDO = distributedCache.get(
+                LLM_STATUS_KEY + docxFileDO.getStatus(),
+                DocxFileStatusDO.class,
+                () -> docxFileStatusMapper.selectOne(
+                        new LambdaQueryWrapper<DocxFileStatusDO>().eq(DocxFileStatusDO::getId, docxFileDO.getStatus())
+                ),
+                TIME_OUT_OF_SECONDS,
+                TimeUnit.SECONDS
+        );
+        docxFileDO.setFileStatus(docxFileStatusDO);
+        System.out.println(docxFileDO);
+
+        DocxFileRespDTO docxFileRespDTO = new DocxFileRespDTO();
+        SBeanUtil.superCopy(docxFileDO, docxFileRespDTO); //
+        return docxFileRespDTO;
+    }
+
+
+    @Override
+    public PageResponse<DocxFileRespDTO> retrievalDocxFilesByPage(PageRequest pageRequest) {
+        IPage<DocxFileDO> page = new Page<>(pageRequest.getCurrent(), pageRequest.getSize());
+
+        LambdaQueryWrapper<DocxFileDO> queryWrapper =
+                new LambdaQueryWrapper<DocxFileDO>()
+                        .eq(DocxFileDO::getUserId, UserContext.getUserId());
+        IPage<DocxFileDO> resultPage = docxFileMapper.selectPage(page, queryWrapper);
+        List<DocxFileRespDTO> convertedRecords = resultPage.getRecords()
+                .stream()
+                .map(docxFileDO -> {
+                    docxFileDO.setFileStatus(
+                            distributedCache.get(
+                                    LLM_STATUS_KEY + docxFileDO.getStatus(),
+                                    DocxFileStatusDO.class,
+                                    () -> docxFileStatusMapper.selectOne(
+                                            new LambdaQueryWrapper<DocxFileStatusDO>().eq(DocxFileStatusDO::getId, docxFileDO.getStatus())
+                                    ),
+                                    TIME_OUT_OF_SECONDS,
+                                    TimeUnit.SECONDS
+                            )
+                    );
+                    return docxFileDO;
+                })
+                .map(docxFileDO -> SBeanUtil.superCopy(docxFileDO, DocxFileRespDTO.class))
+                .collect(Collectors.toList());
+        return new PageResponse<>(resultPage.getCurrent(), resultPage.getSize(), resultPage.getTotal(), convertedRecords);
     }
 }
