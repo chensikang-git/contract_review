@@ -21,12 +21,22 @@ public class DocxFileController {
 
     private final DocxFileService docxFileService;
 
+    /**
+     * 处理上传合同文件
+     * @param docxFile
+     * @return
+     */
     @PostMapping("/upload")  // ok
     public Result<Void> uploadDocxFile(@RequestParam("file") MultipartFile docxFile) {
         docxFileService.uploadDocxFile(docxFile);
         return Results.success();
     }
 
+    /**
+     * 根据合同id查询合同
+     * @param id
+     * @return
+     */
     @DeleteMapping("/delete/{id}")  // ok
     public Result<Void> deleteDocxFile(@PathVariable("id") Long id) {
         docxFileService.deleteDocxFile(id);
@@ -34,16 +44,23 @@ public class DocxFileController {
     }
 
     //todo update应该放在哪里？
+
+    /**
+     * 根据合同id删除文件
+     * @param id
+     * @return
+     */
     @GetMapping("/retrieval/{id}")
     public Result<DocxFileRespDTO> retrievalDocxFile(@PathVariable("id") Long id) {
         return Results.success(docxFileService.retrievalDocxFile(id));
     }
 
-//    @GetMapping("/retrieval")
-    public Result<List<DocxFileRespDTO>> retrievalDocxFiles() {
-        return Results.success(docxFileService.retrievalDocxFiles());
-    }
 
+    /**
+     * 分页查询合同
+     * @param pageRequest
+     * @return
+     */
     @GetMapping("/retrieval")
     public Result<PageResponse<DocxFileRespDTO>> retrievalDocxFilesByPage(PageRequest pageRequest) {
         return Results.success(docxFileService.retrievalDocxFilesByPage(pageRequest));

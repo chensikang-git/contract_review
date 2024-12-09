@@ -10,6 +10,7 @@
     </option>
     <option name="ignoredFiles">
       <set>
+        <option value="$PROJECT_DIR$/chat-service/pom.xml" />
         <option value="$PROJECT_DIR$/contract-review-user-service/pom.xml" />
         <option value="$PROJECT_DIR$/integeration/pom.xml" />
       </set>

@@ -1,21 +1,27 @@
 
 server:
-  port: 9001
+  port: 9004
 spring:
   application:
-    name: chat-law--chat${unique-name:}-service
+    name: contract-review--rule{unique-name:}-service
+  servlet:
+    multipart:
+      enabled: true #是否启用http上传处理
+      max-request-size: 100MB #最大请求文件的大小
+      max-file-size: 20MB #设置单个文件最大长度
+      file-size-threshold: 20MB #当文件达到多少时进行磁盘写入
   datasource:
     driver-class-name: org.apache.shardingsphere.driver.ShardingSphereDriver
     url: jdbc:shardingsphere:classpath:shardingsphere-config.yaml
   data:
     redis:
-      host: 42.193.225.22
+      host: 10.220.138.120
       port: 6379
       password: 20001017  # 添加 Redis 密码
   cloud:
     nacos:
       discovery:
-        server-addr: 42.193.225.22:8848
+        server-addr: 10.220.138.120:8848
       password: nacos
       username: nacos
 mybatis-plus:
@@ -53,10 +59,3 @@ dromara:
         bucket-name: yema-1252530263
         domain: https://yema-1252530263.cos.ap-chengdu.myqcloud.com/ # 访问域名
         base-path: test/ # 基础路径
-feign:
-  client:
-    config:
-      default:
-        loggerLevel: FULL
-
-
