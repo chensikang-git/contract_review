@@ -22,12 +22,12 @@ public class SmallRuleReqDTO {
     private Integer riskLevel;
 
     @NotNull(message = "小规则名称不能为空")
-    private String smallRuleName;
+    private String name;
 
     @NotNull(message = "小规则内容不能为空")
-    private String smallRuleDescription;
+    private String description;
 
-    private Integer createdSource;
+    private Integer createdSource;//创建来源
 
-    private Long ruleTableId;
+    private Long ruleTableId;//大规则id
 }

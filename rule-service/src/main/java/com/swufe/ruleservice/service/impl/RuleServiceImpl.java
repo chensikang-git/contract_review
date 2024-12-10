@@ -36,13 +36,12 @@ public class RuleServiceImpl implements RuleService {
 
     @Override
     public void addSmallRule(SmallRuleReqDTO smallRuleReqDTO) {
-        System.out.println("!!!!!!!!!!!!!!!!!!!smallRuleReqDTO = " + smallRuleReqDTO);
         //先判断是否有小规则重名
-        SmallRuleDO smallRuleDO =distributedCache.get(
-                RULE_KEY+smallRuleReqDTO.getSmallRuleName(),
+        SmallRuleDO smallRuleDO = distributedCache.get(
+                RULE_KEY + smallRuleReqDTO.getName(),
                 SmallRuleDO.class,
                 () -> ruleMapper.selectOne(
-                        new LambdaQueryWrapper<SmallRuleDO>().eq(SmallRuleDO::getName, smallRuleReqDTO.getSmallRuleName())
+                        new LambdaQueryWrapper<SmallRuleDO>().eq(SmallRuleDO::getName, smallRuleReqDTO.getName())
                 ),
                 7200,
                 TimeUnit.SECONDS
@@ -51,23 +50,25 @@ public class RuleServiceImpl implements RuleService {
         Optional.ofNullable(smallRuleDO).ifPresent(e -> {
             throw new ClientException(RULE_NAME_EXIST_ERROR);
         });
-
         //不重名插入小规则表
-        Long ruleTableId = Long.valueOf("");
-        SmallRuleDO newSmallRule = BeanUtil.toBean(smallRuleReqDTO, SmallRuleDO.class);
-        int insert = ruleMapper.insert(newSmallRule);
+        smallRuleDO = BeanUtil.toBean(smallRuleReqDTO, SmallRuleDO.class);
+        System.out.println("!!!!!!!!!!!!!!!smallRuleDO: " + smallRuleDO);
+        int insert = ruleMapper.insert(smallRuleDO);
         if (!SqlHelper.retBool(insert)) {
-            ruleTableId = newSmallRule.getId();  // 获取自动生成的小规则ID
-            System.out.println("ruleTableId ID: " + ruleTableId);
             throw new ServiceException(INSERT_ERROR);
         }
 
+        // 插入成功并且返回id
+        Long ruleDetailId  = smallRuleDO.getId(); // 获取自动生成的小规则ID
+        System.out.println("ruleTableId ID: " + ruleDetailId);
+
         //获取大规则id
-//        ruleTableId=
+        Long ruleTableId = smallRuleReqDTO.getRuleTableId();
+
         //插入关联表
         RelatedRuleDO relatedRule = RelatedRuleDO.builder()
                 .ruleTableId(ruleTableId)
-//                .ruleDetailId(ruleDetailId)
+                .ruleDetailId(ruleDetailId)
                 .build();
 
         // 插入数据到数据库
@@ -79,64 +80,67 @@ public class RuleServiceImpl implements RuleService {
     }
 
     @Override
-    public void deleteSmallRule(String name) {
-        SmallRuleDO smallRuleDO =distributedCache.get(
-                RULE_KEY+name,
+    public void deleteSmallRule(Long id) {
+        SmallRuleDO smallRuleDO = distributedCache.get(
+                RULE_KEY + id,
                 SmallRuleDO.class,
                 () -> ruleMapper.selectOne(
-                        new LambdaQueryWrapper<SmallRuleDO>().eq(SmallRuleDO::getName, name)
+                        new LambdaQueryWrapper<SmallRuleDO>().eq(SmallRuleDO::getId, id)
                 ),
                 7200,
                 TimeUnit.SECONDS
         );
         Optional.ofNullable(smallRuleDO).
                 ifPresentOrElse(
-                u -> {
-                    // 检查来源字段是否为1
-                    if (u.getCreatedSource() != null && u.getCreatedSource() == 1) {
+                        u -> {
+                            // 检查来源字段是否为1
+                            if (u.getCreatedSource() != null && u.getCreatedSource() == 1) {
 
-                        // 删除 related_rule 表中 ruleDetailId 与 smallRuleDO.getId() 相同的记录
-                        relatedRuleMapper.delete(new LambdaQueryWrapper<RelatedRuleDO>()
-                                .eq(RelatedRuleDO::getRuleDetailId, u.getId()));
+                                // 删除 related_rule 表中 ruleDetailId 与 smallRuleDO.getId() 相同的记录
+                                relatedRuleMapper.delete(new LambdaQueryWrapper<RelatedRuleDO>()
+                                        .eq(RelatedRuleDO::getRuleDetailId, u.getId()));
 
-                        // 删除缓存中的数据
-                        distributedCache.delete(RULE_KEY + name);
+                                //todo
+                                //检查大规则表中的userid
 
-                        // 删除数据库中的数据
-                        ruleMapper.deleteById(smallRuleDO.getId());
-                    } else {
-                        throw new ClientException( DELETE_SOURCE_ERROR);
-                    }
-                },
-                () -> {
-                    // 如果小规则不存在，抛出异常
-                    throw new ClientException(SMALL_RULE_DISAPPEAR_ERROR);
-                }
-        );
+                                // 删除缓存中的数据
+                                distributedCache.delete(RULE_KEY + id);
+
+                                // 删除数据库中的数据
+                                ruleMapper.deleteById(smallRuleDO.getId());
+                            } else {
+                                throw new ClientException(DELETE_SOURCE_ERROR);
+                            }
+                        },
+                        () -> {
+                            // 如果小规则不存在，抛出异常
+                            throw new ClientException(SMALL_RULE_DISAPPEAR_ERROR);
+                        }
+                );
+        //todo
+        //删除缓存
     }
 
-   @Override
-public void updateSmallRule(UpdateSmallRuleReqDTO updateSmallRuleReqDTO) {
-    // 从缓存中获取小规则信息
-       SmallRuleDO existingSmallRuleDO = ruleMapper.selectById(updateSmallRuleReqDTO.getId());
+    @Override
+    public void updateSmallRule(UpdateSmallRuleReqDTO updateSmallRuleReqDTO) {
+        SmallRuleDO existingSmallRuleDO = ruleMapper.selectById(updateSmallRuleReqDTO.getId());
 
-       if (existingSmallRuleDO == null) {
-           throw new ClientException(SMALL_RULE_DISAPPEAR_ERROR);
-       }
+        if (existingSmallRuleDO == null) {
+            throw new ClientException(SMALL_RULE_DISAPPEAR_ERROR);
+        }
 
-    // 更新小规则信息
-    BeanUtil.copyProperties(updateSmallRuleReqDTO, existingSmallRuleDO);
+        // 更新小规则信息
+        BeanUtil.copyProperties(updateSmallRuleReqDTO, existingSmallRuleDO);
 
-    // 更新数据库中的小规则
-    int updateResult = ruleMapper.updateById(existingSmallRuleDO);
-    if (!SqlHelper.retBool(updateResult)) {
-        throw new ServiceException(INSERT_ERROR);
+        // 更新数据库中的小规则
+        int updateResult = ruleMapper.updateById(existingSmallRuleDO);
+        if (!SqlHelper.retBool(updateResult)) {
+            throw new ServiceException(INSERT_ERROR);
+        }
+
+        // 删除缓存中的小规则信息
+        distributedCache.delete(RULE_KEY + updateSmallRuleReqDTO.getId());
     }
-
-    // 更新缓存中的小规则信息
-    distributedCache.delete(RULE_KEY + updateSmallRuleReqDTO.getSmallRuleName());
-}
-
 
 
 }
