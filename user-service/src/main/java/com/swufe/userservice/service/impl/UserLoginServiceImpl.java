@@ -11,7 +11,6 @@ import com.swufe.chatlaw.exception.ServiceException;
 import com.swufe.chatlaw.toolkit.JWTUtil;
 import com.swufe.userservice.dao.entity.UserDO;
 import com.swufe.userservice.dto.UserLoginDTO;
-import com.swufe.userservice.dto.UserLogoutDTO;
 import com.swufe.userservice.dto.UserRegisterDTO;
 import com.swufe.userservice.dto.UserUpdateDTO;
 import com.swufe.userservice.service.UserLoginService;
@@ -157,12 +156,13 @@ public class UserLoginServiceImpl implements UserLoginService {
     @Override
     public String uploadPicture(MultipartFile file) {
         // 检查文件是否为空
+//        System.out.println("file!!!!!!!!!:"+file.getOriginalFilename());
         if (file == null || file.isEmpty()) {
-            throw new ClientException("上传失败，文件为空");
+            throw new ClientException(PICTURE_EMPTY_ERROR);
         }
         return Optional.ofNullable(fileStorageService.of(file).upload())
                 .map(FileInfo::getUrl) // 假设 getUrl() 是获取上传后 URL 的方法
-                .orElseThrow(() -> new ServiceException("上传失败，腾讯cos异常"));
+                .orElseThrow(() -> new ServiceException(TENCENT_COS_ERROR));
 
     }
 
@@ -180,7 +180,7 @@ public class UserLoginServiceImpl implements UserLoginService {
     //清理缓存
     private void delUserCache(String  userName) {
         boolean isRemoved = distributedCache.delete(USER_LOGIN_KEY + userName);
-        System.out.println("!!!!!!!!!!!!!"+isRemoved);
+//        System.out.println("!!!!!!!!!!!!!"+isRemoved);
         //清理失败
         if (!isRemoved) {
             throw new ServiceException(REDIS_CLEAN_ERROR);

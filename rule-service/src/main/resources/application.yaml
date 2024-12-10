@@ -3,7 +3,7 @@ server:
   port: 9004
 spring:
   application:
-    name: contract-review--rule{unique-name:}-service
+    name: contract-review-rule-service
   servlet:
     multipart:
       enabled: true #是否启用http上传处理

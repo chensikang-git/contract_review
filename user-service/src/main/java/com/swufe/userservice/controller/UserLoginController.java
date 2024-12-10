@@ -80,6 +80,7 @@ public class UserLoginController {
     @PostMapping("/api/user-service/logout")
     public Result<Void> logout(@Valid @RequestBody UserLogoutDTO userLogoutDTO) {
 //        userLoginService.logout(userLogoutDTO);
+
         return Results.success();
     }
 }

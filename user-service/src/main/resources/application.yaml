@@ -3,7 +3,7 @@ server:
   port: 9002
 spring:
   application:
-    name: contract-review--user${unique-name:}-service
+    name: contract-review--user-service
   servlet:
     multipart:
       enabled: true #是否启用http上传处理
@@ -49,7 +49,7 @@ management:
 dromara:
   x-file-storage: #文件存储配置
     default-platform: tencent-cos-1  #默认使用的存储平台
-    thumbnail-suffix: ".min.jpg" #缩略图后缀，例如【.min.jpg】【.png】
+    thumbnail-suffix: ".min.jpg.png" #缩略图后缀，例如【.min.jpg】【.png】
     tencent-cos:
       - platform: tencent-cos-1 # 存储平台标识
         enable-storage: true  # 启用存储

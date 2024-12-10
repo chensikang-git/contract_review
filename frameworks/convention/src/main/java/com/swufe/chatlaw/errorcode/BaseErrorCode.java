@@ -34,11 +34,17 @@ public enum BaseErrorCode implements IErrorCode {
     USER_PASSWORD_ERROR("A000113", "密码错误"),
     USER_NAME_SENSITIVE_ERROR("A000114", "用户名包含敏感词"),
     USER_NAME_SPECIAL_CHARACTER_ERROR("A000113", "用户名包含特殊字符"),
+    PICTURE_EMPTY_ERROR("A000116","上传图片文件失败，文件为空"),
+
+    RULE_NAME_EXIST_ERROR("A000211", "规则名已存在"),
+    DELETE_SOURCE_ERROR("A000212", "系统创建不可删除"),
+    SMALL_RULE_DISAPPEAR_ERROR("A000211", "规则名已存在"),
 
     FILE_TYPE_ERROR("C000113", "文件格式不正确，请检查文件格式"),
     FILE_TRANS_ERROR("A000114", "服务器文件复制错误"),
     FILE_ADD_ERROR("A000115", "服务器新增文件错误"),
     FILE_NOT_FOUND_ERROR("A000116", "服务器文件不存在错误"),
+    TENCENT_COS_ERROR("A000117", "上传失败，腾讯cos异常"),
 
 
     // ========== 二级宏观错误码 系统请求缺少幂等Token ==========

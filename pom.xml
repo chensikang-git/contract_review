@@ -5,15 +5,15 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.swufe</groupId>
-    <artifactId>chatlaw_miniprogramming</artifactId>
+    <artifactId>contract_review</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <modules>
         <module>dependencies</module>
         <module>service-gateway</module>
+        <module>user-service</module>
         <module>frameworks</module>
         <module>frameworks/base</module>
-        <module>user-service</module>
         <module>frameworks/database</module>
         <module>frameworks/convention</module>
         <module>frameworks/user</module>
@@ -21,10 +21,8 @@
         <module>frameworks/common</module>
         <module>frameworks/web</module>
         <module>frameworks/cache</module>
-        <module>chat-service</module>
         <module>llm-service</module>
         <module>rule-service</module>
-        <!--        <module>contract-review-user-service</module>-->
     </modules>
 
     <properties>

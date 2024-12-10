@@ -57,7 +57,12 @@ public class DocxFileServiceImpl implements DocxFileService {
         } catch (IOException e) {
             throw new ServiceException(FILE_TRANS_ERROR);
         }
-        DocxFileDO docxFileDO = DocxFileDO.builder().fileName(docxFileName).filePath(docxFilePath).status(FILE_INIT_STATUS).userId(userId).build();
+        DocxFileDO docxFileDO = DocxFileDO.builder()
+                .fileName(docxFileName)
+                .filePath(docxFilePath)
+                .status(FILE_INIT_STATUS)
+                .userId(userId)
+                .build();
         int insert = docxFileMapper.insert(docxFileDO);
 
         if (!SqlHelper.retBool(insert)) {
@@ -68,7 +73,7 @@ public class DocxFileServiceImpl implements DocxFileService {
     @Override
     public void deleteDocxFile(Long id) {
         // 删缓存
-        boolean isRemoved = distributedCache.delete(LLM_FILE_KEY + id);
+        boolean isRemoved = distributedCache.delete(LLM_STATUS_KEY + id);
         System.out.println("!!!!!!!!!!!!!"+isRemoved);
         if (!isRemoved) {
             throw new ServiceException(REDIS_CLEAN_ERROR);
@@ -85,19 +90,6 @@ public class DocxFileServiceImpl implements DocxFileService {
         }
     }
 
-    @Override
-    public List<DocxFileRespDTO> retrievalDocxFiles() {
-        return docxFileMapper.selectList(
-                        new LambdaQueryWrapper<DocxFileDO>().eq(DocxFileDO::getUserId, UserContext.getUserId())
-                )
-                .stream()
-                .map(docxFileDO -> {
-                    DocxFileRespDTO docxFileDTO = new DocxFileRespDTO();
-                    BeanUtils.copyProperties(docxFileDO, docxFileDTO);
-                    return docxFileDTO;
-                })
-                .collect(Collectors.toList());
-    }
 
     @Override
     public DocxFileRespDTO retrievalDocxFile(Long id) {

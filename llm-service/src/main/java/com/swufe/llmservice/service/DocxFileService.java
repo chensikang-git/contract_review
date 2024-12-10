@@ -18,7 +18,6 @@ public interface DocxFileService {
 
     DocxFileRespDTO retrievalDocxFile(Long id);
 
-    List<DocxFileRespDTO> retrievalDocxFiles();
 
     PageResponse<DocxFileRespDTO> retrievalDocxFilesByPage(PageRequest pageRequest);
 }
