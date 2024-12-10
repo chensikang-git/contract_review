@@ -38,8 +38,8 @@ public class RuleServiceImpl implements RuleService {
     public void addSmallRule(SmallRuleReqDTO smallRuleReqDTO) {
         System.out.println("!!!!!!!!!!!!!!!!!!!smallRuleReqDTO = " + smallRuleReqDTO);
         //先判断是否有小规则重名
-        SmallRuleDO smallRuleDO =distributedCache.get(
-                RULE_KEY+smallRuleReqDTO.getSmallRuleName(),
+        SmallRuleDO smallRuleDO = distributedCache.get(
+                RULE_KEY + smallRuleReqDTO.getSmallRuleName(),
                 SmallRuleDO.class,
                 () -> ruleMapper.selectOne(
                         new LambdaQueryWrapper<SmallRuleDO>().eq(SmallRuleDO::getName, smallRuleReqDTO.getSmallRuleName())
@@ -78,65 +78,83 @@ public class RuleServiceImpl implements RuleService {
 
     }
 
+//    @Override
+//    public void deleteSmallRule(String name) { // 根据id删除
+//        /**
+//         * 直接去数据库删，然后删缓存，通过影响行数判断业务是否成功
+//         */
+//        SmallRuleDO smallRuleDO = distributedCache.get(
+//                RULE_KEY + name,
+//                SmallRuleDO.class,
+//                () -> ruleMapper.selectOne(
+//                        new LambdaQueryWrapper<SmallRuleDO>().eq(SmallRuleDO::getName, name)
+//                ),
+//                7200,
+//                TimeUnit.SECONDS
+//        );
+//        Optional.ofNullable(smallRuleDO).
+//                ifPresentOrElse(
+//                        u -> {
+//                            // 检查来源字段是否为1
+//                            if (u.getCreatedSource() != null && u.getCreatedSource() == 1) {
+//
+//                                // 删除 related_rule 表中 ruleDetailId 与 smallRuleDO.getId() 相同的记录
+//                                relatedRuleMapper.delete(new LambdaQueryWrapper<RelatedRuleDO>()
+//                                        .eq(RelatedRuleDO::getRuleDetailId, u.getId()));
+//
+//                                // 删除缓存中的数据
+//                                distributedCache.delete(RULE_KEY + name);
+//
+//                                // 删除数据库中的数据
+//                                ruleMapper.deleteById(smallRuleDO.getId());
+//                            } else {
+//                                throw new ClientException(DELETE_SOURCE_ERROR);
+//                            }
+//                        },
+//                        () -> {
+//                            // 如果小规则不存在，抛出异常
+//                            throw new ClientException(SMALL_RULE_DISAPPEAR_ERROR);
+//                        }
+//                );
+//    }
+
+
+    public void deleteSmallRuleById(Integer id) { // 根据id删除
+        /**
+         * 直接去数据库删，然后删缓存，通过影响行数判断业务是否成功
+         */
+
+    }
+
+
+
+
     @Override
-    public void deleteSmallRule(String name) {
-        SmallRuleDO smallRuleDO =distributedCache.get(
-                RULE_KEY+name,
-                SmallRuleDO.class,
-                () -> ruleMapper.selectOne(
-                        new LambdaQueryWrapper<SmallRuleDO>().eq(SmallRuleDO::getName, name)
-                ),
-                7200,
-                TimeUnit.SECONDS
-        );
-        Optional.ofNullable(smallRuleDO).
-                ifPresentOrElse(
-                u -> {
-                    // 检查来源字段是否为1
-                    if (u.getCreatedSource() != null && u.getCreatedSource() == 1) {
+    public void updateSmallRule(UpdateSmallRuleReqDTO updateSmallRuleReqDTO) {
+        /**
+         *    直接去数据库改，然后删缓存，等着用户重新发请求进行查询再放入缓存
+         *
+         *  直接更新update， 数据库执行成功会返回一个row（int），影响行数，如果不为1
+         */
+        SmallRuleDO existingSmallRuleDO = ruleMapper.selectById(updateSmallRuleReqDTO.getId());
 
-                        // 删除 related_rule 表中 ruleDetailId 与 smallRuleDO.getId() 相同的记录
-                        relatedRuleMapper.delete(new LambdaQueryWrapper<RelatedRuleDO>()
-                                .eq(RelatedRuleDO::getRuleDetailId, u.getId()));
 
-                        // 删除缓存中的数据
-                        distributedCache.delete(RULE_KEY + name);
+        if (existingSmallRuleDO == null) {
+            throw new ClientException(SMALL_RULE_DISAPPEAR_ERROR);
+        }
 
-                        // 删除数据库中的数据
-                        ruleMapper.deleteById(smallRuleDO.getId());
-                    } else {
-                        throw new ClientException( DELETE_SOURCE_ERROR);
-                    }
-                },
-                () -> {
-                    // 如果小规则不存在，抛出异常
-                    throw new ClientException(SMALL_RULE_DISAPPEAR_ERROR);
-                }
-        );
+        // 更新小规则信息
+        BeanUtil.copyProperties(updateSmallRuleReqDTO, existingSmallRuleDO);
+
+        // 更新数据库中的小规则
+        int updateResult = ruleMapper.updateById(existingSmallRuleDO);
+        if (!SqlHelper.retBool(updateResult)) {
+            throw new ServiceException(INSERT_ERROR);
+        }
+
+        // 更新缓存中的小规则信息
+        distributedCache.delete(RULE_KEY + updateSmallRuleReqDTO.getSmallRuleName());
     }
-
-   @Override
-public void updateSmallRule(UpdateSmallRuleReqDTO updateSmallRuleReqDTO) {
-    // 从缓存中获取小规则信息
-       SmallRuleDO existingSmallRuleDO = ruleMapper.selectById(updateSmallRuleReqDTO.getId());
-
-       if (existingSmallRuleDO == null) {
-           throw new ClientException(SMALL_RULE_DISAPPEAR_ERROR);
-       }
-
-    // 更新小规则信息
-    BeanUtil.copyProperties(updateSmallRuleReqDTO, existingSmallRuleDO);
-
-    // 更新数据库中的小规则
-    int updateResult = ruleMapper.updateById(existingSmallRuleDO);
-    if (!SqlHelper.retBool(updateResult)) {
-        throw new ServiceException(INSERT_ERROR);
-    }
-
-    // 更新缓存中的小规则信息
-    distributedCache.delete(RULE_KEY + updateSmallRuleReqDTO.getSmallRuleName());
-}
-
 
 
 }

@@ -15,7 +15,6 @@ import lombok.NoArgsConstructor;
 @Builder
 public class SmallRuleReqDTO {
 
-
     @NotNull(message = "风险等级不能为空")
     @Min(value = 0, message = "风险等级必须大于或等于0")
     @Max(value = 2, message = "风险等级必须小于或等于2")
