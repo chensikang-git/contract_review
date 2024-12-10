@@ -94,8 +94,8 @@ public class RuleController {
      *  删除小规则
      */
     @PostMapping("/api/rule-service/delete-small-rule")
-    public Result<Void> DeleteSmallRule(Long id) {
-        ruleService.deleteSmallRule(id);
+    public Result<Void> DeleteSmallRule(Long smallRuleId) {
+        ruleService.deleteSmallRule(smallRuleId);
         return Results.success();
     }
 

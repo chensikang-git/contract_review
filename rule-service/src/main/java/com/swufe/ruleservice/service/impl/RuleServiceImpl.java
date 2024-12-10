@@ -59,7 +59,7 @@ public class RuleServiceImpl implements RuleService {
         }
 
         // 插入成功并且返回id
-        Long ruleDetailId  = smallRuleDO.getId(); // 获取自动生成的小规则ID
+        Long ruleDetailId = smallRuleDO.getId(); // 获取自动生成的小规则ID
         System.out.println("ruleTableId ID: " + ruleDetailId);
 
         //获取大规则id
@@ -80,12 +80,12 @@ public class RuleServiceImpl implements RuleService {
     }
 
     @Override
-    public void deleteSmallRule(Long id) {
+    public void deleteSmallRule(Long smallRuleId) {
         SmallRuleDO smallRuleDO = distributedCache.get(
-                RULE_KEY + id,
+                RULE_KEY + smallRuleId,
                 SmallRuleDO.class,
                 () -> ruleMapper.selectOne(
-                        new LambdaQueryWrapper<SmallRuleDO>().eq(SmallRuleDO::getId, id)
+                        new LambdaQueryWrapper<SmallRuleDO>().eq(SmallRuleDO::getId, smallRuleId)
                 ),
                 7200,
                 TimeUnit.SECONDS
@@ -93,32 +93,38 @@ public class RuleServiceImpl implements RuleService {
         Optional.ofNullable(smallRuleDO).
                 ifPresentOrElse(
                         u -> {
+                            //检查数据是否安全
                             // 检查来源字段是否为1
                             if (u.getCreatedSource() != null && u.getCreatedSource() == 1) {
-
-                                // 删除 related_rule 表中 ruleDetailId 与 smallRuleDO.getId() 相同的记录
-                                relatedRuleMapper.delete(new LambdaQueryWrapper<RelatedRuleDO>()
-                                        .eq(RelatedRuleDO::getRuleDetailId, u.getId()));
-
-                                //todo
-                                //检查大规则表中的userid
-
-                                // 删除缓存中的数据
-                                distributedCache.delete(RULE_KEY + id);
-
-                                // 删除数据库中的数据
-                                ruleMapper.deleteById(smallRuleDO.getId());
-                            } else {
-                                throw new ClientException(DELETE_SOURCE_ERROR);
+                                throw new ClientException("数据异常");
                             }
+                            //去关联表中找到对应的大规则id
+                            Long bigRuleId = relatedRuleMapper.selectOne(new LambdaQueryWrapper<RelatedRuleDO>()
+                                    .eq(RelatedRuleDO::getRuleDetailId, u.getId())).getRuleTableId();
+                            if (bigRuleId == null) {
+                                throw new ClientException("数据异常");
+                            }
+                            //检查大规则表中的userid是否存在
+                            if (ruleMapper.selectById(bigRuleId).getId() == null) {
+                                throw new ClientException("数据异常");
+                            }
+
+                            // 数据安全 可以删除 related_rule 表中 ruleDetailId 与 smallRuleDO.getId() 相同的记录
+                            relatedRuleMapper.delete(new LambdaQueryWrapper<RelatedRuleDO>()
+                                    .eq(RelatedRuleDO::getRuleDetailId, u.getId()));
+
+                            // 删除缓存中的数据
+                            distributedCache.delete(RULE_KEY + smallRuleId);
+
+                            // 删除数据库中的数据
+                            ruleMapper.deleteById(smallRuleDO.getId());
+
                         },
                         () -> {
                             // 如果小规则不存在，抛出异常
                             throw new ClientException(SMALL_RULE_DISAPPEAR_ERROR);
                         }
                 );
-        //todo
-        //删除缓存
     }
 
     @Override

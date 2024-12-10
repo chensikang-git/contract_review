@@ -13,7 +13,7 @@ public interface RuleService {
     void addSmallRule(@Valid SmallRuleReqDTO smallRuleReqDTO);
 
     //删除小规则
-    void deleteSmallRule(@Valid Long id);
+    void deleteSmallRule(@Valid Long smallRuleId);
 
     //更新小规则
     void updateSmallRule(@Valid UpdateSmallRuleReqDTO updateSmallRuleReqDTO);
