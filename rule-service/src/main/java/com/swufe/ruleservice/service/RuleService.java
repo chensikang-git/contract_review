@@ -2,6 +2,7 @@ package com.swufe.ruleservice.service;
 
 import com.swufe.ruleservice.dto.req.SmallRuleReqDTO;
 import com.swufe.ruleservice.dto.req.UpdateSmallRuleReqDTO;
+import com.swufe.ruleservice.dto.resp.SmallRuleDetailRespDTO;
 import jakarta.validation.Valid;
 import org.apache.shardingsphere.distsql.parser.statement.ral.UpdatableGlobalRuleRALStatement;
 import org.springframework.stereotype.Service;
@@ -17,4 +18,7 @@ public interface RuleService {
 
     //更新小规则
     void updateSmallRule(@Valid UpdateSmallRuleReqDTO updateSmallRuleReqDTO);
+
+    //修改小规则时查找小规则详情
+    SmallRuleDetailRespDTO getSmallRuleDetail(Long smallRuleId);
 }

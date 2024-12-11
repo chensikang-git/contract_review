@@ -14,7 +14,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class UpdateSmallRuleReqDTO {
-    private Long Id;
+    @NotNull(message = "小规则id不能为空")
+    private Long smallRuleId;
     @NotNull(message = "风险等级不能为空")
     @Min(value = 0, message = "风险等级必须大于或等于0")
     @Max(value = 2, message = "风险等级必须小于或等于2")
@@ -26,5 +27,4 @@ public class UpdateSmallRuleReqDTO {
     @NotNull(message = "小规则内容不能为空")
     private String smallRuleDescription;
 
-    private Long ruleTableId;
 }

@@ -27,7 +27,7 @@ public class SmallRuleReqDTO {
     @NotNull(message = "小规则内容不能为空")
     private String description;
 
-    private Integer createdSource;//创建来源
-
+//    private Integer createdSource;//创建来源
+    @NotNull(message = "ruleTableId不能为空")
     private Long ruleTableId;//大规则id
 }

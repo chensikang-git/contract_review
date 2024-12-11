@@ -20,12 +20,19 @@ package com.swufe.ruleservice.common.constant;
 /**
  * Redis Key 定义常量类
  */
-public final class RedisKeyConstant {
+public final class RulesConstant {
+    // 项目访问前缀
+    public static final String PROJECT_CONTEXT_PATH = "/api/rule-service";
 
+    // 状态相关
+    public static final int SYSTEM_CREATE_CODE = 0;
+    public static final int USER_CREATE_CODE = 1;
 
-    public static final String RULE_KEY= "contract-review-rule-service-rule-info";
-    public static final String RULE_NAME_KEY= "contract-review-rule-service-rule-name";
+    // redis过期时间
+    public static final int TIME_OUT_OF_SECONDS = 7200;
 
-
+    // redis存放的key前缀
+    public static final String RULE_TABLE_KEY = "contract-review-rule-service-rule-table-record";
+    public static final String RULES_DETAIL_KEY = "contract-review-rule-service-small-rule-info";
 
 }

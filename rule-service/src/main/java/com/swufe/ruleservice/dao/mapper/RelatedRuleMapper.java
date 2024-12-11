@@ -1,9 +1,8 @@
 package com.swufe.ruleservice.dao.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.swufe.ruleservice.dao.entity.RelatedRuleDO;
-import com.swufe.ruleservice.dao.entity.SmallRuleDO;
+import com.swufe.ruleservice.dao.entity.RelatedRuleRecordDO;
 
-public interface RelatedRuleMapper extends BaseMapper<RelatedRuleDO> {
+public interface RelatedRuleMapper extends BaseMapper<RelatedRuleRecordDO> {
 
 }

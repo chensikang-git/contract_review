@@ -36,9 +36,14 @@ public enum BaseErrorCode implements IErrorCode {
     USER_NAME_SPECIAL_CHARACTER_ERROR("A000113", "用户名包含特殊字符"),
     PICTURE_EMPTY_ERROR("A000116","上传图片文件失败，文件为空"),
 
-    RULE_NAME_EXIST_ERROR("A000211", "规则名已存在"),
+    SMALL_RULE_DISAPPEAR_ERROR("A000211", "该小规则不存在"),
     DELETE_SOURCE_ERROR("A000212", "系统创建不可删除"),
-    SMALL_RULE_DISAPPEAR_ERROR("A000211", "规则名已存在"),
+    RELATED_BIG_RULE_DISAPPEAR_ERROR("A000213", "对应大规则不存在"),
+    USER_UNAUTHORIZED_OPERATION_ERROR("A000214", "用户越权操作"),
+    SMALL_RULE_ID_EMPTY_ERROR("A000215", "小规则id不能为空"),
+    SYSTEM_RULE_DELETE_ERROR("A000216", "系统规则不允许删除"),
+    CREATED_SOURCE_ERROR("A000217", "数据源异常"),
+    RELATION_DISAPPEAR_ERROR("A000218", "该小规则无对应关系"),
 
     FILE_TYPE_ERROR("C000113", "文件格式不正确，请检查文件格式"),
     FILE_TRANS_ERROR("A000114", "服务器文件复制错误"),

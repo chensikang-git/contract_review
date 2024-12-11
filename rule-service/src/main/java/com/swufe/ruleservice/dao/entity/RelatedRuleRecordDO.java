@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class RelatedRuleDO  extends BaseDO {
+public class RelatedRuleRecordDO extends BaseDO {
 
     @TableId(value = "id", type = IdType.AUTO) // 使用自增策略作为主键
     private Long id;
