@@ -1,4 +1,4 @@
-package com.swufe.ruleservice.dto.req;
+package com.swufe.ruleservice.dto.resp;
 
 
 import jakarta.validation.constraints.Max;
@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class SmallRuleReqDTO {
+public class SmallRuleDetailRespDTO {
 
 
     @NotNull(message = "风险等级不能为空")
@@ -27,7 +27,5 @@ public class SmallRuleReqDTO {
     @NotNull(message = "小规则内容不能为空")
     private String description;
 
-//    private Integer createdSource;//创建来源
-    @NotNull(message = "ruleTableId不能为空")
-    private Long ruleTableId;//大规则id
+
 }
