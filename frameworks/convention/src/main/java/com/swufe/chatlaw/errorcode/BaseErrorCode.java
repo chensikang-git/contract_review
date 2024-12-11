@@ -47,6 +47,23 @@ public enum BaseErrorCode implements IErrorCode {
     TENCENT_COS_ERROR("A000117", "上传失败，腾讯cos异常"),
 
 
+    //--------------------------------------------------------------
+    RULE_TABLE_INSERT_ERROR("A000118", "新建规则表失败"),
+    RULE_TABLE_NOT_EXIST_ERROR("A000119", "规则表不存在"),
+    RULE_TABLE_UPDATE_ERROR("A000120", "规则表不存在"),
+    NO_PERMISSION_ERROR("A000121", "并不具备操作权限，非法操作！"),
+
+    NO_RECORD_ERROR("A000122", "无此条记录，非法操作"),
+
+    RULE_DETAIL_INSERT_ERROR("A000123", "新建小规则失败"),
+    RELATED_TABLE_INSERT_ERROR("A000124", "新建关联表记录失败"),
+
+
+    RULE_DETAIL_DELETE_ERROR("A000123", "小规则删除失败"),
+    RULE_DETAIL_UPDATE_ERROR("A000124", "小规则更新失败"),
+    //--------------------------------------------------------------
+
+
     // ========== 二级宏观错误码 系统请求缺少幂等Token ==========
     IDEMPOTENT_TOKEN_NULL_ERROR("A000200", "幂等Token为空"),
     IDEMPOTENT_TOKEN_DELETE_ERROR("A000201", "幂等Token已被使用或失效"),
