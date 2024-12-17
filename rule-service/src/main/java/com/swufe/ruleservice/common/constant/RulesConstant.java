@@ -21,7 +21,6 @@ package com.swufe.ruleservice.common.constant;
  * 常量类
  */
 public final class RulesConstant {
-
     // 项目访问前缀
     public static final String PROJECT_CONTEXT_PATH = "/api/rule-service";
 
@@ -34,5 +33,6 @@ public final class RulesConstant {
 
     // redis存放的key前缀
     public static final String RULE_TABLE_KEY = "contract-review-rule-service-rule-table-record";
-    public static final String RULES_DETAIL_KEY = "contract-review-rule-service-rules-detail-record";
+    public static final String RULES_DETAIL_KEY = "contract-review-rule-service-small-rule-info";
+
 }

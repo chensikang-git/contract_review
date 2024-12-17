@@ -1,4 +1,5 @@
 package com.swufe.ruleservice.service.impl;
+
 import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
@@ -18,6 +19,7 @@ import com.swufe.ruleservice.dto.resp.SmallRuleDetailRespDTO;
 import com.swufe.ruleservice.service.RuleService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.jdbc.support.lob.LobCreator;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -189,6 +191,12 @@ public class RuleServiceImpl implements RuleService {
                 .build();
 
     }
+
+
+
+
+
+
 
 
 
