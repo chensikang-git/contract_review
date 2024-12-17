@@ -11,6 +11,8 @@ import java.util.Date;
 @NoArgsConstructor
 public class DocxFileRespDTO{
 
+    private Long id;
+
     private String fileName;
 
     private Date createTime;

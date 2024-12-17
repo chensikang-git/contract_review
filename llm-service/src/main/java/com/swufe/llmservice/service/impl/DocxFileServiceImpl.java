@@ -72,13 +72,6 @@ public class DocxFileServiceImpl implements DocxFileService {
 
     @Override
     public void deleteDocxFile(Long id) {
-        // 删缓存
-        boolean isRemoved = distributedCache.delete(LLM_STATUS_KEY + id);
-        System.out.println("!!!!!!!!!!!!!"+isRemoved);
-        if (!isRemoved) {
-            throw new ServiceException(REDIS_CLEAN_ERROR);
-        }
-
         // 删数据
         int delete = docxFileMapper.delete(
                 new LambdaQueryWrapper<DocxFileDO>()
@@ -88,6 +81,9 @@ public class DocxFileServiceImpl implements DocxFileService {
         if (!SqlHelper.retBool(delete)) {
             throw new ServiceException(FILE_NOT_FOUND_ERROR);
         }
+
+        //删除缓存
+        distributedCache.delete(LLM_STATUS_KEY + id);
     }
 
 

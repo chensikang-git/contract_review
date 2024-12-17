@@ -18,7 +18,7 @@
 package com.swufe.ruleservice.common.constant;
 
 /**
- * Redis Key 定义常量类
+ * 常量类
  */
 public final class RulesConstant {
     // 项目访问前缀

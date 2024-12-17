@@ -4,7 +4,6 @@ import com.swufe.ruleservice.dto.req.SmallRuleReqDTO;
 import com.swufe.ruleservice.dto.req.UpdateSmallRuleReqDTO;
 import com.swufe.ruleservice.dto.resp.SmallRuleDetailRespDTO;
 import jakarta.validation.Valid;
-import org.apache.shardingsphere.distsql.parser.statement.ral.UpdatableGlobalRuleRALStatement;
 import org.springframework.stereotype.Service;
 
 @Service
