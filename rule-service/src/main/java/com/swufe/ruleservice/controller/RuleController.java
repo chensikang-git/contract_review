@@ -18,27 +18,27 @@ public class RuleController {
     private final RuleService ruleService;
 
     /**
-     *  修改小规则时查找小规则详情
+     * 修改小规则时查找小规则详情
      */
-    @PostMapping("/api/rule-service/search-small-rule")
+    @GetMapping("/api/rule-service/search-small-rule")
     public Result<SmallRuleDetailRespDTO> getSmallRuleDetail(Long smallRuleId) {
         return Results.success(ruleService.getSmallRuleDetail(smallRuleId));
     }
 
 
     /**
-     *  增加小规则
+     * 增加小规则
      */
-        @PostMapping("/api/rule-service/add-small-rule")
+    @PostMapping("/api/rule-service/add-small-rule")
     public Result<Void> addSmallRule(@Valid @RequestBody SmallRuleReqDTO smallRuleReqDTO) {
         ruleService.addSmallRule(smallRuleReqDTO);
         return Results.success();
     }
 
     /**
-     *  删除小规则
+     * 删除小规则
      */
-    @PostMapping("/api/rule-service/delete-small-rule")
+    @DeleteMapping("/api/rule-service/delete-small-rule")
     public Result<Void> DeleteSmallRule(Long smallRuleId) {
         ruleService.deleteSmallRule(smallRuleId);
         return Results.success();
@@ -46,9 +46,9 @@ public class RuleController {
 
 
     /**
-     *  修改小规则
+     * 修改小规则
      */
-    @PostMapping("/api/rule-service/update-small-rule")
+    @PutMapping("/api/rule-service/update-small-rule")
     public Result<Void> updateSmallRule(@Valid @RequestBody UpdateSmallRuleReqDTO updateSmallRuleReqDTO) {
         ruleService.updateSmallRule(updateSmallRuleReqDTO);
         return Results.success();

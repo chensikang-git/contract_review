@@ -22,6 +22,7 @@ import com.swufe.userservice.dto.UserLoginDTO;
 import com.swufe.userservice.dto.UserLogoutDTO;
 import com.swufe.userservice.dto.UserRegisterDTO;
 import com.swufe.userservice.dto.UserUpdateDTO;
+import com.swufe.userservice.dto.resp.GetUserDetailRespDTO;
 import jakarta.validation.Valid;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -38,6 +39,9 @@ public interface UserLoginService {
 
     //用户上传头像
     String uploadPicture(MultipartFile file);
+
+    //获取用户信息
+    GetUserDetailRespDTO getUserDetail();
 //
 //    //注销用户登录
 //    void logout(@Valid UserLogoutDTO userLogoutDTO);

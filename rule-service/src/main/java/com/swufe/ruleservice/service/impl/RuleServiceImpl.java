@@ -54,7 +54,8 @@ public class RuleServiceImpl implements RuleService {
 
         //安全检查完则插入小规则表
         RulesDetailRecordDO rulesDetailRecordDO = BeanUtil.toBean(smallRuleReqDTO, RulesDetailRecordDO.class);
-//        System.out.println("!!!!!!!!!!!!!!!smallRuleDO: " + smallRuleDO);
+        rulesDetailRecordDO.setCreatedSource(1);
+//        System.out.println("!!!!!!!!!!!!!!!smallRuleDO: " + rulesDetailRecordDO);
         int insert = rulesDetailMapper.insert(rulesDetailRecordDO);
         if (!SqlHelper.retBool(insert)) {
             throw new ServiceException(INSERT_ERROR);
@@ -100,7 +101,7 @@ public class RuleServiceImpl implements RuleService {
                             //检查数据是否安全
                             // 检查来源字段是否为1
                             if (u.getCreatedSource() != 1) {
-                                throw new ClientException(SYSTEM_RULE_DELETE_ERROR);
+                                throw new ClientException(SYSTEM_RULE_REVISE_ERROR);
                             }
                             checkSecurity(smallRuleId);
 
@@ -141,7 +142,7 @@ public class RuleServiceImpl implements RuleService {
         //更新小规则前 检查数据安全
         // 检查创建源
         if (existingRulesDetailRecordDO.getCreatedSource() != 1) {
-            throw new ClientException(CREATED_SOURCE_ERROR);
+            throw new ClientException(SYSTEM_RULE_REVISE_ERROR);
         }
 
         checkSecurity(existingRulesDetailRecordDO.getId());
@@ -170,7 +171,27 @@ public class RuleServiceImpl implements RuleService {
         Optional.ofNullable(smallRuleId)
                 .orElseThrow(() -> new ClientException(SMALL_RULE_ID_EMPTY_ERROR));
 
-        checkSecurity(smallRuleId);
+        //查看关系表中的对应关系
+        RelatedRuleRecordDO relatedRule = relatedRuleMapper.selectOne(
+                new LambdaQueryWrapper<RelatedRuleRecordDO>().eq(RelatedRuleRecordDO::getRuleDetailId, smallRuleId)
+        );
+        Optional.ofNullable(relatedRule)
+                .orElseThrow(() -> new ClientException(RELATION_DISAPPEAR_ERROR));
+        // 得到大规则id
+        Long ruleTableId = relatedRule.getRuleTableId();
+
+        // 查看是否存在对应大规则
+        RuleTableRecordDO bigRule = distributedCache.get(
+                RULES_DETAIL_KEY + ruleTableId,
+                RuleTableRecordDO.class,
+                () -> ruleTableMapper.selectOne(
+                        new LambdaQueryWrapper<RuleTableRecordDO>().eq(RuleTableRecordDO::getId, ruleTableId)
+                ),
+                7200,
+                TimeUnit.SECONDS
+        );
+        Optional.ofNullable(bigRule)
+                .orElseThrow(() -> new ClientException(RELATED_BIG_RULE_DISAPPEAR_ERROR));
 
         RulesDetailRecordDO rulesDetailRecordDO = distributedCache.get(
                 RULES_DETAIL_KEY + smallRuleId,
@@ -229,7 +250,7 @@ public class RuleServiceImpl implements RuleService {
             // 检查登录id和大规则id是否一样
             Long userId = UserContext.getUserId();
             if (!Objects.equals(userId, bigRule.getUserId())) {
-                throw new ClientException(USER_UNAUTHORIZED_OPERATION_ERROR);
+                throw new ClientException(SYSTEM_RULE_REVISE_ERROR);
             }
 
             log.info("数据安全检查通过，smallRuleId: {}, ruleTableId: {}, userId: {}", smallRuleId, ruleTableId, userId);

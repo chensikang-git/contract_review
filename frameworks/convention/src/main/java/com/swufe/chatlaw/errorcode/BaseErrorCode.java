@@ -41,7 +41,7 @@ public enum BaseErrorCode implements IErrorCode {
     RELATED_BIG_RULE_DISAPPEAR_ERROR("A000213", "对应大规则不存在"),
     USER_UNAUTHORIZED_OPERATION_ERROR("A000214", "用户越权操作"),
     SMALL_RULE_ID_EMPTY_ERROR("A000215", "小规则id不能为空"),
-    SYSTEM_RULE_DELETE_ERROR("A000216", "系统规则不允许删除"),
+    SYSTEM_RULE_REVISE_ERROR("A000216", "系统规则不允许删除或修改"),
     CREATED_SOURCE_ERROR("A000217", "数据源异常"),
     RELATION_DISAPPEAR_ERROR("A000218", "该小规则无对应关系"),
 
@@ -55,8 +55,8 @@ public enum BaseErrorCode implements IErrorCode {
     //--------------------------------------------------------------
     RULE_TABLE_INSERT_ERROR("A000118", "新建规则表失败"),
     RULE_TABLE_NOT_EXIST_ERROR("A000119", "规则表不存在"),
-    RULE_TABLE_UPDATE_ERROR("A000120", "规则表不存在"),
-    NO_PERMISSION_ERROR("A000121", "并不具备操作权限，非法操作！"),
+    RULE_TABLE_UPDATE_ERROR("A000120", "规则插入失败"),
+//    NO_PERMISSION_ERROR("A000121", "并不具备操作权限，非法操作！"),
 
     NO_RECORD_ERROR("A000122", "无此条记录，非法操作"),
 

@@ -63,22 +63,27 @@ public class RuleTableServiceImpl implements RuleTableService {
                     if (ruleTableRecordDO.getUserId() == null) {
                         return ruleTableRecordDO; // 如果 userId 为 null，也返回 ruleTableRecordDO
                     } else {
-                        throw new ServiceException(NO_PERMISSION_ERROR); // 否则抛出异常
+                        throw new ServiceException(SYSTEM_RULE_REVISE_ERROR); // 否则抛出异常
                     }
                 });
     }
 
     // 校验与获取一并进行，用户只能自己创建的的大规则记录
     private RuleTableRecordDO getUserRuleTableRecord(Long ruleTableRecordId) {
+//        System.out.println("!!!!!!!!!!!ruleTableRecordId"+ruleTableRecordId);
         RuleTableRecordDO ruleTableRecordDO = distributedCache.get(
                 RULE_TABLE_KEY + ruleTableRecordId,
                 RuleTableRecordDO.class,
                 () -> ruleTableMapper.selectOne(new LambdaQueryWrapper<RuleTableRecordDO>()
-                        .eq(RuleTableRecordDO::getUserId, UserContext.getUserId())
                         .eq(RuleTableRecordDO::getId, ruleTableRecordId)),
                 TIME_OUT_OF_SECONDS,
                 TimeUnit.SECONDS
         );
+//        System.out.println("!!!!!!!!!!!ruleTableRecordDO="+ruleTableRecordDO);
+        if(ruleTableRecordDO.getCreatedSource().equals(0)){
+            throw new ServiceException(SYSTEM_RULE_REVISE_ERROR);
+
+        }
         Optional.ofNullable(ruleTableRecordDO).orElseThrow(() -> new ServiceException(RULE_TABLE_NOT_EXIST_ERROR));
 
         return ruleTableRecordDO;
@@ -105,6 +110,21 @@ public class RuleTableServiceImpl implements RuleTableService {
                                 .eq(RuleTableRecordDO::getUserId, UserContext.getUserId()));
 
         IPage<RuleTableRecordDO> resultPage = ruleTableMapper.selectPage(page, queryWrapper);
+
+//        // 如果有模糊查询条件
+//        if (pageRequestExtend.getWords() != null && !pageRequestExtend.getWords().isEmpty()) {
+//            queryWrapper.like(RuleTableRecordDO::getName, pageRequestExtend.getWords());
+//        }
+//
+//// 过滤条件：查询当前用户的记录或者系统级的记录（userId 为 null）
+//        queryWrapper.and(wrapper ->
+//                wrapper.isNull(RuleTableRecordDO::getUserId)
+//                        .or()
+//                        .eq(RuleTableRecordDO::getUserId, UserContext.getUserId())
+//        );
+//
+//        IPage<RuleTableRecordDO> resultPage = ruleTableMapper.selectPage(page, queryWrapper);
+
         List<RuleTableRecordRespDTO> convertedRecords = resultPage.getRecords()
                 .stream()
                 .map(
@@ -176,7 +196,7 @@ public class RuleTableServiceImpl implements RuleTableService {
     //更新一个大规则
     public void updateRuleTableRecord(RuleTableRecordUpdateDTO ruleTableRecordUpdateDTO) {
         RuleTableRecordDO legalRuleTableRecordDO = getUserRuleTableRecord(ruleTableRecordUpdateDTO.getId());
-
+//        System.out.println("!!!!!!!!!legalRuleTableRecordDO"+legalRuleTableRecordDO);
         RuleTableRecordDO newRuleTableRecordDO = RuleTableRecordDO.builder()
                 .id(ruleTableRecordUpdateDTO.getId())
                 .name(ruleTableRecordUpdateDTO.getName())

@@ -143,7 +143,11 @@ public class DocxFileServiceImpl implements DocxFileService {
                     );
                     return docxFileDO;
                 })
-                .map(docxFileDO -> SBeanUtil.superCopy(docxFileDO, DocxFileRespDTO.class))
+                .map(docxFileDO -> {
+                    DocxFileRespDTO docxFileRespDTO = new DocxFileRespDTO();
+                    BeanUtils.copyProperties(docxFileDO, docxFileRespDTO);
+                    return docxFileRespDTO;
+                })
                 .collect(Collectors.toList());
         return new PageResponse<>(resultPage.getCurrent(), resultPage.getSize(), resultPage.getTotal(), convertedRecords);
     }

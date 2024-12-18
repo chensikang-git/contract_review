@@ -13,6 +13,7 @@ import com.swufe.userservice.dao.entity.UserDO;
 import com.swufe.userservice.dto.UserLoginDTO;
 import com.swufe.userservice.dto.UserRegisterDTO;
 import com.swufe.userservice.dto.UserUpdateDTO;
+import com.swufe.userservice.dto.resp.GetUserDetailRespDTO;
 import com.swufe.userservice.service.UserLoginService;
 import com.swufe.userservice.dao.mapper.UserMapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -163,6 +164,36 @@ public class UserLoginServiceImpl implements UserLoginService {
         return Optional.ofNullable(fileStorageService.of(file).upload())
                 .map(FileInfo::getUrl) // 假设 getUrl() 是获取上传后 URL 的方法
                 .orElseThrow(() -> new ServiceException(TENCENT_COS_ERROR));
+
+    }
+
+    @Override
+    public GetUserDetailRespDTO getUserDetail() {
+        String username = UserContext.getUsername();
+        Optional. ofNullable(username)
+                .orElseThrow(() -> new ClientException(USER_NAME_NOT_EXIST_ERROR));
+
+
+        UserDO userDO = distributedCache.get(
+                USER_LOGIN_KEY + username,
+                UserDO.class,
+                () -> userMapper.selectOne(
+                        new LambdaQueryWrapper<UserDO>().eq(UserDO::getUsername, username)
+                ),
+                7200,
+                TimeUnit.SECONDS
+        );
+        // 检查用户是否存在
+        if (userDO == null) {
+            throw new ClientException(USER_NAME_NOT_EXIST_ERROR);
+        }
+        return GetUserDetailRespDTO.builder()
+                .username(userDO.getUsername())
+                .password(userDO.getPassword())
+                .phoneNumber(userDO.getPhoneNumber())
+                .userPic(userDO.getUserPic())
+                .build();
+
 
     }
 

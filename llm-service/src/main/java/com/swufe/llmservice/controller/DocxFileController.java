@@ -27,7 +27,7 @@ public class DocxFileController {
      * @return
      */
     @PostMapping("/upload")  // ok
-    public Result<Void> uploadDocxFile(@RequestParam("file") MultipartFile docxFile) {
+    public Result<Void> uploadDocxFile(@RequestParam("docxFile") MultipartFile docxFile) {
         docxFileService.uploadDocxFile(docxFile);
         return Results.success();
     }

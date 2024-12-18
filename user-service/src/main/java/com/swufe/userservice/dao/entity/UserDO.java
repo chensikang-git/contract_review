@@ -34,10 +34,6 @@ public class UserDO extends BaseDO {
      */
     private String password;
 
-    /**
-     * 用户邮箱
-     */
-    private String email;
 
     /**
      * 用户头像 URL

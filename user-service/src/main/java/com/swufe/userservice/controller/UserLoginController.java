@@ -24,6 +24,7 @@ import com.swufe.userservice.dto.UserLoginDTO;
 import com.swufe.userservice.dto.UserLogoutDTO;
 import com.swufe.userservice.dto.UserRegisterDTO;
 import com.swufe.userservice.dto.UserUpdateDTO;
+import com.swufe.userservice.dto.resp.GetUserDetailRespDTO;
 import com.swufe.userservice.service.UserLoginService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -74,13 +75,21 @@ public class UserLoginController {
         return Results.success(userLoginService.uploadPicture(file));
     }
 
+
+    /**
+     * 修改用户信息时获取用户详情
+     */
+    @GetMapping("/api/user-service/getUserDetail")
+    public Result<GetUserDetailRespDTO> getUserDetail() {
+        return Results.success(userLoginService.getUserDetail());
+    }
+
     /**
      * 注销用户登录
      */
     @PostMapping("/api/user-service/logout")
     public Result<Void> logout(@Valid @RequestBody UserLogoutDTO userLogoutDTO) {
 //        userLoginService.logout(userLogoutDTO);
-
         return Results.success();
     }
 }
