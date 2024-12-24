@@ -8,12 +8,14 @@ import com.swufe.chatlaw.DistributedCache;
 import com.swufe.chatlaw.core.UserContext;
 import com.swufe.chatlaw.exception.ServiceException;
 import com.swufe.chatlaw.page.PageResponse;
-import com.swufe.ruleservice.dao.entity.RelatedRuleRecordDO;
-import com.swufe.ruleservice.dao.entity.RuleTableRecordDO;
-import com.swufe.ruleservice.dao.entity.RulesDetailRecordDO;
-import com.swufe.ruleservice.dao.mapper.RelatedRuleMapper;
-import com.swufe.ruleservice.dao.mapper.RuleTableMapper;
-import com.swufe.ruleservice.dao.mapper.RulesDetailMapper;
+import com.swufe.ruleservice.dao.entity.rule.RelatedRuleRecordDO;
+import com.swufe.ruleservice.dao.entity.rule.RuleTableRecordDO;
+import com.swufe.ruleservice.dao.entity.rule.RulesDetailRecordDO;
+import com.swufe.ruleservice.dao.entity.strategy.RelatedStrategyRecordDO;
+import com.swufe.ruleservice.dao.mapper.rule.RelatedRuleMapper;
+import com.swufe.ruleservice.dao.mapper.rule.RuleTableMapper;
+import com.swufe.ruleservice.dao.mapper.rule.RulesDetailMapper;
+import com.swufe.ruleservice.dao.mapper.strategy.RelatedStrategyMapper;
 import com.swufe.ruleservice.dto.req.*;
 import com.swufe.ruleservice.dto.resp.RuleTableRecordRespDTO;
 import com.swufe.ruleservice.dto.resp.RuleTableWithDetailRespDTO;
@@ -42,7 +44,15 @@ public class RuleTableServiceImpl implements RuleTableService {
     private final RuleTableMapper ruleTableMapper;
     private final RulesDetailMapper rulesDetailMapper;
     private final RelatedRuleMapper relatedRuleMapper;
+    private final RelatedStrategyMapper relatedStrategyMapper;
 
+    //根据小规则id删除缓存和策略关联表中的小规则
+    public void deleteRelatedStrategyAndCacheBySmallRuleId(Long smallRuleId) {
+        distributedCache.delete(RULES_DETAIL_KEY + smallRuleId);
+        relatedStrategyMapper.delete(
+                new LambdaQueryWrapper<RelatedStrategyRecordDO>().eq(RelatedStrategyRecordDO::getRuleDetailId, smallRuleId)
+        );
+    }
 
     // 校验与获取一并进行，用户只能拿到系统与自己的大规则记录
     private RuleTableRecordDO getLegalRuleTableRecord(Long ruleTableRecordId) {
@@ -80,9 +90,8 @@ public class RuleTableServiceImpl implements RuleTableService {
                 TimeUnit.SECONDS
         );
 //        System.out.println("!!!!!!!!!!!ruleTableRecordDO="+ruleTableRecordDO);
-        if(ruleTableRecordDO.getCreatedSource().equals(0)){
+        if (ruleTableRecordDO.getCreatedSource().equals(0)) {
             throw new ServiceException(SYSTEM_RULE_REVISE_ERROR);
-
         }
         Optional.ofNullable(ruleTableRecordDO).orElseThrow(() -> new ServiceException(RULE_TABLE_NOT_EXIST_ERROR));
 
@@ -92,6 +101,7 @@ public class RuleTableServiceImpl implements RuleTableService {
 
     //分页获取大规则，加模糊查找功能(只能获取系统的以及当前登录用户的)
     public PageResponse<RuleTableRecordRespDTO> getRuleTablesByPage(PageRequestExtend pageRequestExtend) {
+
         IPage<RuleTableRecordDO> page = new Page<>(pageRequestExtend.getCurrent(), pageRequestExtend.getSize());
 
         LambdaQueryWrapper<RuleTableRecordDO> queryWrapper =
@@ -164,6 +174,7 @@ public class RuleTableServiceImpl implements RuleTableService {
                 .forEach(
                         relatedRuleRecordDO -> {
                             int delete1 = rulesDetailMapper.deleteById(relatedRuleRecordDO.getRuleDetailId());
+                            deleteRelatedStrategyAndCacheBySmallRuleId(relatedRuleRecordDO.getRuleDetailId());
                             int delete2 = relatedRuleMapper.deleteById(relatedRuleRecordDO.getId());
                             Boolean delete3 = distributedCache.delete(RULES_DETAIL_KEY + relatedRuleRecordDO.getRuleDetailId());
                             //
@@ -215,6 +226,7 @@ public class RuleTableServiceImpl implements RuleTableService {
 
 
     //获取一个大规则详情（包含大规则下的所有小规则）
+    @Override
     public RuleTableWithDetailRespDTO getRulesDetailsByRuleTableRecord(Long ruleTableRecordId) {
         RuleTableRecordDO ruleTableRecordDO = getLegalRuleTableRecord(ruleTableRecordId);
 

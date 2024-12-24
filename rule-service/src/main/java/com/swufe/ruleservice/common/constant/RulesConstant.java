@@ -34,5 +34,6 @@ public final class RulesConstant {
     // redis存放的key前缀
     public static final String RULE_TABLE_KEY = "contract-review-rule-service-rule-table-record";
     public static final String RULES_DETAIL_KEY = "contract-review-rule-service-small-rule-info";
+    public static final String STRATEGY_TABLE_KEY = "contract-review-rule-service-strategy-table-record";
 
 }

@@ -1,7 +1,7 @@
-package com.swufe.ruleservice.dao.mapper;
+package com.swufe.ruleservice.dao.mapper.rule;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.swufe.ruleservice.dao.entity.RulesDetailRecordDO;
+import com.swufe.ruleservice.dao.entity.rule.RulesDetailRecordDO;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper

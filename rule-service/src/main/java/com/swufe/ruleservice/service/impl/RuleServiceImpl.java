@@ -7,19 +7,20 @@ import com.swufe.chatlaw.DistributedCache;
 import com.swufe.chatlaw.core.UserContext;
 import com.swufe.chatlaw.exception.ClientException;
 import com.swufe.chatlaw.exception.ServiceException;
-import com.swufe.ruleservice.dao.entity.RuleTableRecordDO;
-import com.swufe.ruleservice.dao.entity.RelatedRuleRecordDO;
-import com.swufe.ruleservice.dao.entity.RulesDetailRecordDO;
-import com.swufe.ruleservice.dao.mapper.RuleTableMapper;
-import com.swufe.ruleservice.dao.mapper.RelatedRuleMapper;
-import com.swufe.ruleservice.dao.mapper.RulesDetailMapper;
+import com.swufe.ruleservice.dao.entity.rule.RuleTableRecordDO;
+import com.swufe.ruleservice.dao.entity.rule.RelatedRuleRecordDO;
+import com.swufe.ruleservice.dao.entity.rule.RulesDetailRecordDO;
+import com.swufe.ruleservice.dao.entity.strategy.RelatedStrategyRecordDO;
+import com.swufe.ruleservice.dao.mapper.rule.RuleTableMapper;
+import com.swufe.ruleservice.dao.mapper.rule.RelatedRuleMapper;
+import com.swufe.ruleservice.dao.mapper.rule.RulesDetailMapper;
+import com.swufe.ruleservice.dao.mapper.strategy.RelatedStrategyMapper;
 import com.swufe.ruleservice.dto.req.SmallRuleReqDTO;
 import com.swufe.ruleservice.dto.req.UpdateSmallRuleReqDTO;
 import com.swufe.ruleservice.dto.resp.SmallRuleDetailRespDTO;
 import com.swufe.ruleservice.service.RuleService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.jdbc.support.lob.LobCreator;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -38,6 +39,7 @@ public class RuleServiceImpl implements RuleService {
     private final DistributedCache distributedCache;
     private final RelatedRuleMapper relatedRuleMapper;
     private final RuleTableMapper ruleTableMapper;
+    private final RelatedStrategyMapper relatedStrategyMapper;
 
     @Override
     public void addSmallRule(SmallRuleReqDTO smallRuleReqDTO) {
@@ -97,20 +99,19 @@ public class RuleServiceImpl implements RuleService {
         Optional.ofNullable(rulesDetailRecordDO).
                 ifPresentOrElse(
                         // 如果小规则存在
-                        u -> {
+                        ruleDetailDO -> {
                             //检查数据是否安全
                             // 检查来源字段是否为1
-                            if (u.getCreatedSource() != 1) {
+                            if (ruleDetailDO.getCreatedSource() != 1) {
                                 throw new ClientException(SYSTEM_RULE_REVISE_ERROR);
                             }
                             checkSecurity(smallRuleId);
 
                             // 数据安全 可以删除
                             relatedRuleMapper.delete(new LambdaQueryWrapper<RelatedRuleRecordDO>()
-                                    .eq(RelatedRuleRecordDO::getRuleDetailId, u.getId()));
+                                    .eq(RelatedRuleRecordDO::getRuleDetailId, ruleDetailDO.getId()));
 
-                            // 删除缓存中的数据
-                            distributedCache.delete(RULES_DETAIL_KEY + smallRuleId);
+                            deleteRelatedStrategyAndCacheBySmallRuleId(ruleDetailDO.getId());
 
                             // 删除数据库中的数据
                             if (rulesDetailRecordDO != null) {
@@ -261,6 +262,14 @@ public class RuleServiceImpl implements RuleService {
             log.error("未知错误: {}", e.getMessage(), e);
             throw new ClientException("系统错误");
         }
+    }
+
+    //根据小规则id删除缓存和策略关联表中的小规则
+    public void deleteRelatedStrategyAndCacheBySmallRuleId(Long smallRuleId) {
+        distributedCache.delete(RULES_DETAIL_KEY + smallRuleId);
+        relatedStrategyMapper.delete(
+                new LambdaQueryWrapper<RelatedStrategyRecordDO>().eq(RelatedStrategyRecordDO::getRuleDetailId, smallRuleId)
+        );
     }
 
 }

@@ -1,4 +1,4 @@
-package com.swufe.ruleservice.dao.entity;
+package com.swufe.ruleservice.dao.entity.rule;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
